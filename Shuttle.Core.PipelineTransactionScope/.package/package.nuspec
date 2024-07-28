@@ -18,7 +18,7 @@
 		<dependencies>
       <dependency id="Microsoft.Extensions.Hosting" version="7.0.1" />
       <dependency id="Shuttle.Core.Pipelines" version="14.0.0" />
-      <dependency id="Shuttle.Core.Transactions" version="11.1.0" />
+      <dependency id="Shuttle.Core.TransactionScope" version="11.1.0" />
 		</dependencies>
 	</metadata>
 	<files>
