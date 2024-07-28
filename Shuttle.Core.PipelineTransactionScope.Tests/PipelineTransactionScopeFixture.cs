@@ -4,8 +4,8 @@ using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using Shuttle.Core.Data;
 using Shuttle.Core.Pipelines;
-using Shuttle.Core.Transactions;
 using System.Data.Common;
+using Shuttle.Core.TransactionScope;
 
 namespace Shuttle.Core.PipelineTransactionScope.Tests;
 
@@ -31,8 +31,6 @@ public class PipelineTransactionScopeFixture
 
     private async Task Should_be_able_to_use_pipeline_transaction_scope_async(bool sync)
     {
-
-
         var services = new ServiceCollection();
 
         services

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
+﻿using System.Threading.Tasks;
 using Shuttle.Core.Contract;
 using Shuttle.Core.Pipelines;
-using Shuttle.Core.Transactions;
 
 namespace Shuttle.Core.PipelineTransactionScope
 {
-    public interface ITransactionScopeObserver : 
-        IPipelineObserver<OnCompleteTransactionScope>, 
+    public interface ITransactionScopeObserver :
+        IPipelineObserver<OnCompleteTransactionScope>,
         IPipelineObserver<OnDisposeTransactionScope>,
-        IPipelineObserver<OnAbortPipeline>, 
+        IPipelineObserver<OnAbortPipeline>,
         IPipelineObserver<OnPipelineException>
     {
     }
@@ -50,7 +46,7 @@ namespace Shuttle.Core.PipelineTransactionScope
             var state = Guard.AgainstNull(pipelineEvent, nameof(pipelineEvent)).Pipeline.State;
             var scope = state.GetTransactionScope();
 
-            if (scope == null || pipelineEvent.Pipeline.Exception != null || state.GetTransactionScopeCompleted() && !state.GetCompleteTransactionScope())
+            if (scope == null || pipelineEvent.Pipeline.Exception != null || (state.GetTransactionScopeCompleted() && !state.GetCompleteTransactionScope()))
             {
                 return;
             }

@@ -2,21 +2,22 @@
 
 <package>
 	<metadata>
-		<id>Shuttle.Core.PipelineTransaction</id>
-		<version>13.0.0</version>
+		<id>Shuttle.Core.PipelineTransactionScope</id>
+		<version>14.0.0</version>
 		<authors>Eben Roux</authors>
 		<owners>Eben Roux</owners>
 		<license type="expression">BSD-3-Clause</license>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<icon>images\logo.png</icon>
 		<readme>docs\README.md</readme>
-		<repository type="git" url="https://github.com/shuttle/Shuttle.Core.PipelineTransaction.git" />
-		<projectUrl>https://github.com/shuttle/Shuttle.Core.PipelineTransaction</projectUrl>
-		<description>Provides a pipeline observer to handle transaction scopes.</description>
+		<repository type="git" url="https://github.com/shuttle/Shuttle.Core.PipelineTransactionScope.git" />
+		<projectUrl>https://github.com/shuttle/Shuttle.Core.PipelineTransactionScope</projectUrl>
+		<description>Provides a mechanism to create a transaction scope when a pipeline stage starts.</description>
 		<copyright>Copyright (c) 2024, Eben Roux</copyright>
-		<tags>shuttle pipelines transactions transactionscope</tags>
+		<tags>pipelines transactions transactionscope</tags>
 		<dependencies>
-      <dependency id="Shuttle.Core.Pipelines" version="13.0.0" />
+      <dependency id="Microsoft.Extensions.Hosting" version="7.0.1" />
+      <dependency id="Shuttle.Core.Pipelines" version="14.0.0" />
       <dependency id="Shuttle.Core.Transactions" version="11.1.0" />
 		</dependencies>
 	</metadata>

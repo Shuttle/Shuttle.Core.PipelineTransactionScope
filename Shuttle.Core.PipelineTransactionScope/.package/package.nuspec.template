@@ -2,7 +2,7 @@
 
 <package>
 	<metadata>
-		<id>Shuttle.Core.PipelineTransaction</id>
+		<id>Shuttle.Core.PipelineTransactionScope</id>
 		<version>#{SemanticVersion}#</version>
 		<authors>Eben Roux</authors>
 		<owners>Eben Roux</owners>
@@ -10,11 +10,11 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<icon>images\logo.png</icon>
 		<readme>docs\README.md</readme>
-		<repository type="git" url="https://github.com/shuttle/Shuttle.Core.PipelineTransaction.git" />
-		<projectUrl>https://github.com/shuttle/Shuttle.Core.PipelineTransaction</projectUrl>
-		<description>Provides a pipeline observer to handle transaction scopes.</description>
+		<repository type="git" url="https://github.com/shuttle/Shuttle.Core.PipelineTransactionScope.git" />
+		<projectUrl>https://github.com/shuttle/Shuttle.Core.PipelineTransactionScope</projectUrl>
+		<description>Provides a mechanism to create a transaction scope when a pipeline stage starts.</description>
 		<copyright>Copyright (c) #{Year}#, Eben Roux</copyright>
-		<tags>shuttle pipelines transactions transactionscope</tags>
+		<tags>pipelines transactions transactionscope</tags>
 		<dependencies>
 #{Dependencies}#
 		</dependencies>
