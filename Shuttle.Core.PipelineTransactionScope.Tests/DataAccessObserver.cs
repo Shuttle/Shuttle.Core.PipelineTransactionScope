@@ -1,89 +1,60 @@
 ﻿using NUnit.Framework;
 using Shuttle.Core.Contract;
 using Shuttle.Core.Data;
+using Shuttle.Core.Pipelines;
 
 namespace Shuttle.Core.PipelineTransactionScope.Tests;
 
 public class DataAccessObserver : IDataAccessObserver
 {
     private readonly IDatabaseContextFactory _databaseContextFactory;
-    private readonly IDatabaseGateway _databaseGateway;
 
-    public DataAccessObserver(IDatabaseContextFactory databaseContextFactory, IDatabaseGateway databaseGateway)
+    public DataAccessObserver(IDatabaseContextFactory databaseContextFactory)
     {
-        _databaseContextFactory = Guard.AgainstNull(databaseContextFactory, nameof(databaseContextFactory));
-        _databaseGateway = Guard.AgainstNull(databaseGateway, nameof(databaseGateway));
+        _databaseContextFactory = Guard.AgainstNull(databaseContextFactory);
     }
 
-    public void Execute(OnCreateTable pipelineEvent)
+    public async Task ExecuteAsync(IPipelineContext<OnCreateTable> pipelineContext)
     {
-        using (_databaseContextFactory.Create())
+        await using (var databaseContext = _databaseContextFactory.Create())
         {
-            _databaseGateway.Execute(new Query("CREATE TABLE [dbo].[DataAccessObserver] ([Id] [int] NOT NULL PRIMARY KEY);"));
+            await databaseContext.ExecuteAsync(new Query("CREATE TABLE [dbo].[DataAccessObserver] ([Id] [int] NOT NULL PRIMARY KEY);"));
         }
     }
 
-    public async Task ExecuteAsync(OnCreateTable pipelineEvent)
+    public async Task ExecuteAsync(IPipelineContext<OnInsertRow> pipelineContext)
     {
-        Execute(pipelineEvent);
-
-        await Task.CompletedTask;
-    }
-
-    public void Execute(OnInsertRow pipelineEvent)
-    {
-        using (_databaseContextFactory.Create())
+        await using (var databaseContext = _databaseContextFactory.Create())
         {
-            _databaseGateway.Execute(new Query("INSERT INTO [dbo].[DataAccessObserver] ([Id]) VALUES (100);"));
+            await databaseContext.ExecuteAsync(new Query("INSERT INTO [dbo].[DataAccessObserver] ([Id]) VALUES (100);"));
         }
     }
 
-    public async Task ExecuteAsync(OnInsertRow pipelineEvent)
-    {
-        Execute(pipelineEvent);
-
-        await Task.CompletedTask;
-    }
-
-    public void Execute(OnAssertRow pipelineEvent)
+    public async Task ExecuteAsync(IPipelineContext<OnAssertRow> pipelineContext)
     {
         bool exists;
-        
-        using (_databaseContextFactory.Create())
+
+        await using (var databaseContext = _databaseContextFactory.Create())
         {
-            exists = _databaseGateway.GetScalar<int>(new Query("IF EXISTS (SELECT NULL FROM [dbo].[DataAccessObserver] WHERE [Id] = 100) SELECT 1 ELSE SELECT 0")) == 1;
+            exists = await databaseContext.GetScalarAsync<int>(new Query("IF EXISTS (SELECT NULL FROM [dbo].[DataAccessObserver] WHERE [Id] = 100) SELECT 1 ELSE SELECT 0")) == 1;
         }
 
-        if (pipelineEvent.Pipeline.State.Get("should-exist").Equals(true) && !exists)
+        if ((pipelineContext.Pipeline.State.Get("should-exist") ?? false).Equals(true) && !exists)
         {
             throw new AssertionException("The row should exist.");
         }
 
-        if (pipelineEvent.Pipeline.State.Get("should-exist").Equals(false) && exists)
+        if ((pipelineContext.Pipeline.State.Get("should-exist") ?? false).Equals(false) && exists)
         {
             throw new AssertionException("The row should not exist.");
         }
     }
 
-    public async Task ExecuteAsync(OnAssertRow pipelineEvent)
+    public async Task ExecuteAsync(IPipelineContext<OnDropTable> pipelineContext)
     {
-        Execute(pipelineEvent);
-
-        await Task.CompletedTask;
-    }
-
-    public void Execute(OnDropTable pipelineEvent)
-    {
-        using (_databaseContextFactory.Create())
+        await using (var databaseContext = _databaseContextFactory.Create())
         {
-            _databaseGateway.Execute(new Query("DROP TABLE IF EXISTS [dbo].[DataAccessObserver];"));
+            await databaseContext.ExecuteAsync(new Query("DROP TABLE IF EXISTS [dbo].[DataAccessObserver];"));
         }
-    }
-
-    public async Task ExecuteAsync(OnDropTable pipelineEvent)
-    {
-        Execute(pipelineEvent);
-
-        await Task.CompletedTask;
     }
 }

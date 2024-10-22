@@ -1,16 +1,13 @@
-﻿using Shuttle.Core.Pipelines;
+﻿namespace Shuttle.Core.PipelineTransactionScope;
 
-namespace Shuttle.Core.PipelineTransactionScope
+public class OnCompleteTransactionScope
 {
-    public class OnCompleteTransactionScope : PipelineEvent
-    {
-    }
+}
 
-    public class OnAfterCompleteTransactionScope : PipelineEvent
-    {
-    }
+public class OnAfterCompleteTransactionScope
+{
+}
 
-    public class OnDisposeTransactionScope : PipelineEvent
-    {
-    }
+public class OnDisposeTransactionScope
+{
 }

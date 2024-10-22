@@ -1,10 +1,10 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Data.Common;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using Shuttle.Core.Data;
 using Shuttle.Core.Pipelines;
-using System.Data.Common;
 using Shuttle.Core.TransactionScope;
 
 namespace Shuttle.Core.PipelineTransactionScope.Tests;
@@ -18,18 +18,7 @@ public class PipelineTransactionScopeFixture
     }
 
     [Test]
-    public void Should_be_able_to_use_pipeline_transaction_scope()
-    {
-        Should_be_able_to_use_pipeline_transaction_scope_async(true).GetAwaiter().GetResult();
-    }
-
-    [Test]
     public async Task Should_be_able_to_use_pipeline_transaction_scope_async()
-    {
-        await Should_be_able_to_use_pipeline_transaction_scope_async(false);
-    }
-
-    private async Task Should_be_able_to_use_pipeline_transaction_scope_async(bool sync)
     {
         var services = new ServiceCollection();
 
@@ -61,27 +50,13 @@ public class PipelineTransactionScopeFixture
 
         completeTransactionScopePipeline.State.Add("should-exist", true);
 
-        if (sync)
-        {
-            completeTransactionScopePipeline.Execute();
-        }
-        else
-        {
-            await completeTransactionScopePipeline.ExecuteAsync();
-        }
+        await completeTransactionScopePipeline.ExecuteAsync();
 
         var disposeTransactionScopePipeline = pipelineFactory.GetPipeline<DisposeTransactionScopePipeline>();
 
         disposeTransactionScopePipeline.State.Add("should-exist", false);
 
-        if (sync)
-        {
-            disposeTransactionScopePipeline.Execute();
-        }
-        else
-        {
-            await disposeTransactionScopePipeline.ExecuteAsync();
-        }
+        await disposeTransactionScopePipeline.ExecuteAsync();
 
         await hostedService.StopAsync(default);
     }

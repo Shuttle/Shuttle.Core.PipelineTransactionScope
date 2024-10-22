@@ -20,6 +20,6 @@ public class CompleteTransactionScopePipeline : Pipeline
         RegisterStage("Drop")
             .WithEvent<OnDropTable>();
 
-        RegisterObserver(Guard.AgainstNull(dataAccessObserver, nameof(dataAccessObserver)));
+        RegisterObserver(Guard.AgainstNull(dataAccessObserver));
     }
 }

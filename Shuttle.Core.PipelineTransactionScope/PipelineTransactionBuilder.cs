@@ -2,23 +2,22 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shuttle.Core.Contract;
 
-namespace Shuttle.Core.PipelineTransactionScope
+namespace Shuttle.Core.PipelineTransactionScope;
+
+public class PipelineTransactionScopeBuilder
 {
-    public class PipelineTransactionScopeBuilder
+    public PipelineTransactionScopeBuilder(IServiceCollection services)
     {
-        public IServiceCollection Services { get; }
-        public IPipelineTransactionScopeConfiguration Configuration { get; } = new PipelineTransactionScopeConfiguration();
+        Services = Guard.AgainstNull(services);
+    }
 
-        public PipelineTransactionScopeBuilder(IServiceCollection services)
-        {
-            Services = Guard.AgainstNull(services, nameof(services));
-        }
+    public IPipelineTransactionScopeConfiguration Configuration { get; } = new PipelineTransactionScopeConfiguration();
+    public IServiceCollection Services { get; }
 
-        public PipelineTransactionScopeBuilder AddStage(Type pipelineType, string stageName)
-        {
-            Configuration.AddPipeline(pipelineType, stageName);
+    public PipelineTransactionScopeBuilder AddStage(Type pipelineType, string stageName)
+    {
+        Configuration.AddPipeline(pipelineType, stageName);
 
-            return this;
-        }
+        return this;
     }
 }

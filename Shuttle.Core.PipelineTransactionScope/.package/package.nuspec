@@ -3,7 +3,7 @@
 <package>
 	<metadata>
 		<id>Shuttle.Core.PipelineTransactionScope</id>
-		<version>14.0.0</version>
+		<version>20.0.0</version>
 		<authors>Eben Roux</authors>
 		<owners>Eben Roux</owners>
 		<license type="expression">BSD-3-Clause</license>
@@ -16,9 +16,9 @@
 		<copyright>Copyright (c) 2024, Eben Roux</copyright>
 		<tags>pipelines transactions transactionscope</tags>
 		<dependencies>
-      <dependency id="Microsoft.Extensions.Hosting" version="7.0.1" />
-      <dependency id="Shuttle.Core.Pipelines" version="14.0.0" />
-      <dependency id="Shuttle.Core.TransactionScope" version="11.1.0" />
+			      <dependency id="Microsoft.Extensions.Hosting" version="8.0.1" />
+      <dependency id="Shuttle.Core.Pipelines" version="20.0.0" />
+      <dependency id="Shuttle.Core.TransactionScope" version="20.0.0" />
 		</dependencies>
 	</metadata>
 	<files>

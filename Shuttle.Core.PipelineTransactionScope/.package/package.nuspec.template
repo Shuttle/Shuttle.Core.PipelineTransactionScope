@@ -16,7 +16,7 @@
 		<copyright>Copyright (c) #{Year}#, Eben Roux</copyright>
 		<tags>pipelines transactions transactionscope</tags>
 		<dependencies>
-#{Dependencies}#
+			#{Dependencies}#
 		</dependencies>
 	</metadata>
 	<files>

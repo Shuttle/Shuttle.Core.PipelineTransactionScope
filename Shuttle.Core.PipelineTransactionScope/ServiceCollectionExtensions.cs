@@ -3,24 +3,23 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shuttle.Core.Contract;
 
-namespace Shuttle.Core.PipelineTransactionScope
+namespace Shuttle.Core.PipelineTransactionScope;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static IServiceCollection AddPipelineTransactionScope(this IServiceCollection services, Action<PipelineTransactionScopeBuilder>? builder = null)
     {
-        public static IServiceCollection AddPipelineTransactionScope(this IServiceCollection services, Action<PipelineTransactionScopeBuilder> builder = null)
-        {
-            Guard.AgainstNull(services, nameof(services));
+        Guard.AgainstNull(services);
 
-            var pipelineTransactionScopeBuilder = new PipelineTransactionScopeBuilder(services);
+        var pipelineTransactionScopeBuilder = new PipelineTransactionScopeBuilder(services);
 
-            builder?.Invoke(pipelineTransactionScopeBuilder);
+        builder?.Invoke(pipelineTransactionScopeBuilder);
 
-            services.AddSingleton<ITransactionScopeObserver, TransactionScopeObserver>();
-            services.TryAddSingleton(pipelineTransactionScopeBuilder.Configuration);
+        services.AddSingleton<ITransactionScopeObserver, TransactionScopeObserver>();
+        services.TryAddSingleton(pipelineTransactionScopeBuilder.Configuration);
 
-            services.AddHostedService<PipelineTransactionScopeHostedService>();
+        services.AddHostedService<PipelineTransactionScopeHostedService>();
 
-            return services;
-        }
+        return services;
     }
 }
