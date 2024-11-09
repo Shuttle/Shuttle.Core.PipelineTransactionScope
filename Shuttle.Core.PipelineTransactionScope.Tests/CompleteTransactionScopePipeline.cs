@@ -5,21 +5,22 @@ namespace Shuttle.Core.PipelineTransactionScope.Tests;
 
 public class CompleteTransactionScopePipeline : Pipeline
 {
-    public CompleteTransactionScopePipeline(IDataAccessObserver dataAccessObserver)
+    public CompleteTransactionScopePipeline(IServiceProvider serviceProvider, IDataAccessObserver dataAccessObserver) 
+        : base(serviceProvider)
     {
-        RegisterStage("Create")
+        AddStage("Create")
             .WithEvent<OnDropTable>()
             .WithEvent<OnCreateTable>();
 
-        var stage = RegisterStage("DataAccess")
+        AddStage("DataAccess")
             .WithEvent<OnInsertRow>()
             .WithEvent<OnCompleteTransactionScope>()
             .WithEvent<OnDisposeTransactionScope>()
             .WithEvent<OnAssertRow>();
 
-        RegisterStage("Drop")
+        AddStage("Drop")
             .WithEvent<OnDropTable>();
 
-        RegisterObserver(Guard.AgainstNull(dataAccessObserver));
+        AddObserver(Guard.AgainstNull(dataAccessObserver));
     }
 }

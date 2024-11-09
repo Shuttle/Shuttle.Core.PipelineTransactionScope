@@ -50,7 +50,7 @@ public class PipelineTransactionScopeHostedService : IHostedService
         e.Pipeline.StageStarting += StageStarting;
         e.Pipeline.StageCompleted += StageCompleted;
 
-        e.Pipeline.RegisterObserver(_transactionScopeObserver);
+        e.Pipeline.AddObserver(_transactionScopeObserver);
     }
 
     private void StageCompleted(object? sender, PipelineEventArgs e)
