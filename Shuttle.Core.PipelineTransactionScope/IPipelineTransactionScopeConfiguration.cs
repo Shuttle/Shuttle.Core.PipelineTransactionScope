@@ -4,7 +4,8 @@ namespace Shuttle.Core.PipelineTransactionScope;
 
 public interface IPipelineTransactionScopeConfiguration
 {
-    void AddPipeline(Type pipelineType, string stageName);
+    void Add(Type pipelineType, string stageName);
 
-    string? GetStageName(Type pipelineType);
+    bool Contains(Type pipelineType);
+    bool Contains(Type pipelineType, string stageName);
 }

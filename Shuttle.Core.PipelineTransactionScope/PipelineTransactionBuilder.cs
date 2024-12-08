@@ -16,7 +16,7 @@ public class PipelineTransactionScopeBuilder
 
     public PipelineTransactionScopeBuilder AddStage(Type pipelineType, string stageName)
     {
-        Configuration.AddPipeline(pipelineType, stageName);
+        Configuration.Add(pipelineType, stageName);
 
         return this;
     }

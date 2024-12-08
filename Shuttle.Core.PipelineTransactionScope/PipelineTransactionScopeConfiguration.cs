@@ -6,17 +6,36 @@ namespace Shuttle.Core.PipelineTransactionScope;
 
 public class PipelineTransactionScopeConfiguration : IPipelineTransactionScopeConfiguration
 {
-    private readonly Dictionary<Type, string> _pipelineStageName = new();
+    private readonly Dictionary<Type, List<string>> _pipelineStageName = new();
 
-    public void AddPipeline(Type pipelineType, string stageName)
-    {
-        _pipelineStageName[Guard.AgainstNull(pipelineType)] = Guard.AgainstNullOrEmptyString(stageName);
-    }
-
-    public string? GetStageName(Type pipelineType)
+    public void Add(Type pipelineType, string stageName)
     {
         Guard.AgainstNull(pipelineType);
+        Guard.AgainstNullOrEmptyString(stageName);
 
-        return _pipelineStageName.TryGetValue(pipelineType, out var value) ? value : null;
+        if (!_pipelineStageName.ContainsKey(pipelineType))
+        {
+            _pipelineStageName[pipelineType] = new();
+        }
+
+        if (_pipelineStageName[pipelineType].Contains(stageName))
+        {
+            return;
+        }
+
+        _pipelineStageName[pipelineType].Add(stageName);
+    }
+
+    public bool Contains(Type pipelineType)
+    {
+        return _pipelineStageName.ContainsKey(Guard.AgainstNull(pipelineType));
+    }
+
+    public bool Contains(Type pipelineType, string stageName)
+    {
+        Guard.AgainstNull(pipelineType);
+        Guard.AgainstNullOrEmptyString(stageName);
+
+        return _pipelineStageName.TryGetValue(pipelineType, out var value) && value.Contains(stageName);
     }
 }

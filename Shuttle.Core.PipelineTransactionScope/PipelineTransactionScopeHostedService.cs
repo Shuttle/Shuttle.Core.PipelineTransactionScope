@@ -42,7 +42,7 @@ public class PipelineTransactionScopeHostedService : IHostedService
     {
         var type = e.Pipeline.GetType();
 
-        if (string.IsNullOrEmpty(_configuration.GetStageName(type)))
+        if (!_configuration.Contains(type))
         {
             return;
         }
@@ -55,10 +55,9 @@ public class PipelineTransactionScopeHostedService : IHostedService
 
     private void StageCompleted(object? sender, PipelineEventArgs e)
     {
-        var stageName = _configuration.GetStageName(e.Pipeline.GetType());
+        var type = e.Pipeline.GetType();
 
-        if (string.IsNullOrWhiteSpace(stageName) ||
-            !stageName.Equals(e.Pipeline.StageName, StringComparison.InvariantCultureIgnoreCase))
+        if (!_configuration.Contains(type, e.Pipeline.StageName))
         {
             return;
         }
@@ -69,10 +68,9 @@ public class PipelineTransactionScopeHostedService : IHostedService
 
     private void StageStarting(object? sender, PipelineEventArgs e)
     {
-        var stageName = _configuration.GetStageName(e.Pipeline.GetType());
+        var type = e.Pipeline.GetType();
 
-        if (string.IsNullOrWhiteSpace(stageName) ||
-            !stageName.Equals(e.Pipeline.StageName, StringComparison.InvariantCultureIgnoreCase))
+        if (!_configuration.Contains(type, e.Pipeline.StageName))
         {
             return;
         }
