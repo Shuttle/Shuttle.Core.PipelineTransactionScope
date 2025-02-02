@@ -2,25 +2,40 @@
 using System.Collections.Generic;
 using Shuttle.Core.Contract;
 
-namespace Shuttle.Core.PipelineTransactionScope
+namespace Shuttle.Core.PipelineTransactionScope;
+
+public class PipelineTransactionScopeConfiguration : IPipelineTransactionScopeConfiguration
 {
-    public class PipelineTransactionScopeConfiguration : IPipelineTransactionScopeConfiguration
+    private readonly Dictionary<Type, List<string>> _pipelineStageName = new();
+
+    public void Add(Type pipelineType, string stageName)
     {
-        private readonly Dictionary<Type, string> _pipelineStageName = new Dictionary<Type, string>();
+        Guard.AgainstNull(pipelineType);
+        Guard.AgainstNullOrEmptyString(stageName);
 
-        public void AddPipeline(Type pipelineType, string stageName)
+        if (!_pipelineStageName.ContainsKey(pipelineType))
         {
-            Guard.AgainstNull(pipelineType, nameof(pipelineType));
-            Guard.AgainstNullOrEmptyString(stageName, nameof(stageName));
-
-            _pipelineStageName[pipelineType] = stageName;
+            _pipelineStageName[pipelineType] = new();
         }
 
-        public string GetStageName(Type pipelineType)
+        if (_pipelineStageName[pipelineType].Contains(stageName))
         {
-            Guard.AgainstNull(pipelineType, nameof(pipelineType));
-
-            return _pipelineStageName.ContainsKey(pipelineType) ? _pipelineStageName[pipelineType] : null;
+            return;
         }
+
+        _pipelineStageName[pipelineType].Add(stageName);
+    }
+
+    public bool Contains(Type pipelineType)
+    {
+        return _pipelineStageName.ContainsKey(Guard.AgainstNull(pipelineType));
+    }
+
+    public bool Contains(Type pipelineType, string stageName)
+    {
+        Guard.AgainstNull(pipelineType);
+        Guard.AgainstNullOrEmptyString(stageName);
+
+        return _pipelineStageName.TryGetValue(pipelineType, out var value) && value.Contains(stageName);
     }
 }

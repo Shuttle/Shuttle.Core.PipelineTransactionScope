@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Shuttle.Core.PipelineTransactionScope
-{
-    public interface IPipelineTransactionScopeConfiguration
-    {
-        void AddPipeline(Type pipelineType, string stageName);
+namespace Shuttle.Core.PipelineTransactionScope;
 
-        string GetStageName(Type pipelineType);
-    }
+public interface IPipelineTransactionScopeConfiguration
+{
+    void Add(Type pipelineType, string stageName);
+
+    bool Contains(Type pipelineType);
+    bool Contains(Type pipelineType, string stageName);
 }

@@ -1,23 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-		<PackageReference Include="NUnit" Version="3.14.0" />
-		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-		<PackageReference Include="Shuttle.Core.Data" Version="16.0.2" />
-		<PackageReference Include="Shuttle.Core.Data.ThreadDatabaseContextScope" Version="16.0.2" />
-		<PackageReference Include="Shuttle.Core.Pipelines" Version="14.0.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="Shuttle.Core.Data" Version="20.0.0" />
+    <PackageReference Include="Shuttle.Core.Pipelines" Version="20.0.0" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Shuttle.Core.PipelineTransactionScope\Shuttle.Core.PipelineTransactionScope.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shuttle.Core.PipelineTransactionScope\Shuttle.Core.PipelineTransactionScope.csproj" />
+  </ItemGroup>
 
 </Project>

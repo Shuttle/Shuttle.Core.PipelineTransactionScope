@@ -2,114 +2,94 @@
 using Shuttle.Core.Contract;
 using Shuttle.Core.Pipelines;
 
-namespace Shuttle.Core.PipelineTransactionScope
+namespace Shuttle.Core.PipelineTransactionScope;
+
+public interface ITransactionScopeObserver :
+    IPipelineObserver<OnCompleteTransactionScope>,
+    IPipelineObserver<OnDisposeTransactionScope>,
+    IPipelineObserver<OnAbortPipeline>,
+    IPipelineObserver<OnPipelineException>
 {
-    public interface ITransactionScopeObserver :
-        IPipelineObserver<OnCompleteTransactionScope>,
-        IPipelineObserver<OnDisposeTransactionScope>,
-        IPipelineObserver<OnAbortPipeline>,
-        IPipelineObserver<OnPipelineException>
+}
+
+public class TransactionScopeObserver : ITransactionScopeObserver
+{
+    public async Task ExecuteAsync(IPipelineContext<OnCompleteTransactionScope> pipelineContext)
     {
+        var pipeline = Guard.AgainstNull(pipelineContext).Pipeline;
+        var state = pipeline.State;
+        var scope = state.GetTransactionScope();
+
+        if (scope == null || pipeline.Exception != null || (state.GetTransactionScopeCompleted() && !state.GetCompleteTransactionScope()))
+        {
+            return;
+        }
+
+        scope.Complete();
+
+        state.SetTransactionScopeCompleted();
+
+        await Task.CompletedTask;
     }
 
-    public class TransactionScopeObserver : ITransactionScopeObserver
+    public async Task ExecuteAsync(IPipelineContext<OnDisposeTransactionScope> pipelineContext)
     {
-        public void Execute(OnAbortPipeline pipelineEvent)
+        var state = Guard.AgainstNull(pipelineContext).Pipeline.State;
+        var scope = state.GetTransactionScope();
+
+        if (scope == null)
         {
-            var state = Guard.AgainstNull(pipelineEvent, nameof(pipelineEvent)).Pipeline.State;
-            var scope = state.GetTransactionScope();
-
-            if (scope == null)
-            {
-                return;
-            }
-
-            if (state.GetCompleteTransactionScope())
-            {
-                scope.Complete();
-            }
-
-            scope.Dispose();
-
-            state.SetTransactionScope(null);
+            return;
         }
 
-        public async Task ExecuteAsync(OnAbortPipeline pipelineEvent)
-        {
-            Execute(pipelineEvent);
+        scope.Dispose();
 
-            await Task.CompletedTask;
+        state.SetTransactionScope(null);
+
+        await Task.CompletedTask;
+    }
+
+    public async Task ExecuteAsync(IPipelineContext<OnAbortPipeline> pipelineContext)
+    {
+        var state = Guard.AgainstNull(pipelineContext).Pipeline.State;
+        var scope = state.GetTransactionScope();
+
+        if (scope == null)
+        {
+            return;
         }
 
-        public void Execute(OnCompleteTransactionScope pipelineEvent)
+        if (state.GetCompleteTransactionScope())
         {
-            var state = Guard.AgainstNull(pipelineEvent, nameof(pipelineEvent)).Pipeline.State;
-            var scope = state.GetTransactionScope();
-
-            if (scope == null || pipelineEvent.Pipeline.Exception != null || (state.GetTransactionScopeCompleted() && !state.GetCompleteTransactionScope()))
-            {
-                return;
-            }
-
             scope.Complete();
-
-            state.SetTransactionScopeCompleted();
         }
 
-        public async Task ExecuteAsync(OnCompleteTransactionScope pipelineEvent)
+        scope.Dispose();
+
+        state.SetTransactionScope(null);
+
+        await Task.CompletedTask;
+    }
+
+    public async Task ExecuteAsync(IPipelineContext<OnPipelineException> pipelineContext)
+    {
+        var state = Guard.AgainstNull(pipelineContext).Pipeline.State;
+        var scope = state.GetTransactionScope();
+
+        if (scope == null)
         {
-            Execute(pipelineEvent);
-
-            await Task.CompletedTask;
+            return;
         }
 
-        public void Execute(OnDisposeTransactionScope pipelineEvent)
+        if (state.GetCompleteTransactionScope())
         {
-            var state = Guard.AgainstNull(pipelineEvent, nameof(pipelineEvent)).Pipeline.State;
-            var scope = state.GetTransactionScope();
-
-            if (scope == null)
-            {
-                return;
-            }
-
-            scope.Dispose();
-
-            state.SetTransactionScope(null);
+            scope.Complete();
         }
 
-        public async Task ExecuteAsync(OnDisposeTransactionScope pipelineEvent)
-        {
-            Execute(pipelineEvent);
+        scope.Dispose();
 
-            await Task.CompletedTask;
-        }
+        state.SetTransactionScope(null);
 
-        public void Execute(OnPipelineException pipelineEvent)
-        {
-            var state = Guard.AgainstNull(pipelineEvent, nameof(pipelineEvent)).Pipeline.State;
-            var scope = state.GetTransactionScope();
-
-            if (scope == null)
-            {
-                return;
-            }
-
-            if (state.GetCompleteTransactionScope())
-            {
-                scope.Complete();
-            }
-
-            scope.Dispose();
-
-            state.SetTransactionScope(null);
-        }
-
-        public async Task ExecuteAsync(OnPipelineException pipelineEvent)
-        {
-            Execute(pipelineEvent);
-
-            await Task.CompletedTask;
-        }
+        await Task.CompletedTask;
     }
 }
