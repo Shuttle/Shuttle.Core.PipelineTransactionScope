@@ -13,7 +13,7 @@
 		<repository type="git" url="https://github.com/shuttle/Shuttle.Core.PipelineTransactionScope.git" />
 		<projectUrl>https://github.com/shuttle/Shuttle.Core.PipelineTransactionScope</projectUrl>
 		<description>Provides a mechanism to create a transaction scope when a pipeline stage starts.</description>
-		<copyright>Copyright (c) 2024, Eben Roux</copyright>
+		<copyright>Copyright (c) 2025, Eben Roux</copyright>
 		<tags>pipelines transactions transactionscope</tags>
 		<dependencies>
 			      <dependency id="Microsoft.Extensions.Hosting" version="8.0.1" />
